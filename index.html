@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock, Paper, Scissors Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rock, Paper, Scissors Game</h1>
+    <p>First to 3 points wins!</p>
+    <div class ="choices">
+        <button id="rock">Rock</button>
+        <button id="paper">Paper</button>
+        <button id="scissors">Scissors</button>
+    </div>
+    <div class = "results">
+        <p id="round-result">Make your choice to start the game!</p>
+    </div>
+    <div class="scores">
+        <p>Human Score: <span id = "human-score"> 0 </span></p>
+        <p>Computer Score: <span id = "computer-score"> 0 </span></p>
+    </div>
+    <button id="reset-game" style="margin: top 20px; display:none;">Reset Game</button>
+    <script>
+        let humanScore = 0;
+        let computerScore = 0;
+
+        const humanScoreSpan = document.getElementById("human-score");
+        const computerScoreSpan = document.getElementById("computer-score");
+        const roundResult = document.getElementById("round-result");   
+        const resetButton = document.getElementById("reset-game");
+        
+        document.getElementById("rock").addEventListener("click", () => playRound("rock"));
+        document.getElementById("paper").addEventListener("click", () => playRound("paper"));
+        document.getElementById("scissors").addEventListener("click", () => playRound("scissors"));
+        resetButton.addEventListener("click", resetGame);
+
+        function playRound(humanChoice) {
+            const computerChoice = getComputerChoice();
+            const result = determineWinner(humanChoice, computerChoice);
+
+            roundResult.textContent = `You chose ${humanChoice.toUpperCase()}, Computer chose ${computerChoice.toUpperCase()}. ${result.message}`;
+            humanScoreSpan.textContent = humanScore;
+            computerScoreSpan.textContent = computerScore;
+
+            if (humanScore ===3 || computerScore === 3) {
+                endGame();
+            }
+        }
+        function determineWinner(humanChoice, computerChoice) {
+            if (humanChoice === computerChoice) {
+                return {message: "It's a tie!" };
+            }
+            if (
+                (humanChoice === "rock" && computerChoice === "scissors") ||
+                (humanChoice === "paper" && computerChoice === "rock") ||
+                (humanChoice === "scissors" && computerChoice === "paper")
+            ) {
+                humanScore++;
+                return { message: "You win this round!" };
+            } else {
+                computerScore++;
+                return { message: "Computer wins this round!" };
+            }
+        }
+        function getComputerChoice() {
+            const choices = ["rock", "paper", "scissors"];
+            const randomIndex = Math.floor(Math.random() * choices.length);
+            return choices[randomIndex];
+        }
+
+        function endGame() {
+            if (humanScore > computerScore) {
+                roundResult.textContent = "Congratulations! You win the game!";
+            } else if (computerScore > humanScore) {
+                roundResult.textContent = "Sorry! The computer wins the game!";
+            } else {
+                roundResult.textContent = "It's a tie overall!";
+            }
+            resetButton.style.display = "block";
+            document.querySelectorAll(".choices button").forEach(button => { button.disabled = true; });
+        }
+        function resetGame() {
+            humanScore = 0;
+            computerScore = 0;
+            humanScoreSpan.textContent = humanScore;
+            computerScoreSpan.textContent = computerScore;
+            roundResult.textContent = "Make your choice to start the game!";
+            resetButton.style.display = "none";
+            document.querySelectorAll(".choices button").forEach(button => { button.disabled = false; });
+        }
+        
+        
+    </script>
+</body>
+
+</html>
