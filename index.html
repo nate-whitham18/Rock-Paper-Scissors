@@ -21,6 +21,16 @@
             margin-top: 20px;
             cursor: pointer;
         }
+        #reset-game {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            position: relative;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -38,7 +48,11 @@
         <p>Human Score: <span id = "human-score"> 0 </span></p>
         <p>Computer Score: <span id = "computer-score"> 0 </span></p>
     </div>
-    <button id="reset-game" style="margin: top 20px; display:none;">Reset Game</button>
+    <br><br>
+    <div class="reset">
+        <button id="reset-game">Reset Game</button>
+    </div>
+
     <script>
         let humanScore = 0;
         let computerScore = 0;
