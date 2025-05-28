@@ -5,18 +5,22 @@ A simple interactive Rock, Paper, Scissors game built with HTML, CSS, and JavaSc
 ## Features
 
 - Play against the computer in a classic Rock, Paper, Scissors match
-- First to 3 points wins the game
+- Select "Best of" rounds (3, 5, or 7)
 - Real-time score tracking and round results
+- Game history showing each round's choices and outcome
 - Responsive and user-friendly interface
 - "Reset Game" button to start a new match
+- Toggle between light and dark mode
 
 ## How to Play
 
 1. Open `index.html` in your web browser.
-2. Click on "Rock", "Paper", or "Scissors" to make your choice.
-3. The computer will randomly select its move.
-4. The result of each round and the updated scores will be displayed.
-5. The first to reach 3 points wins. Click "Reset Game" to play again.
+2. Select the number of rounds to play ("Best of" 3, 5, or 7).
+3. Click on "Rock", "Paper", or "Scissors" to make your choice.
+4. The computer will randomly select its move.
+5. The result of each round and the updated scores will be displayed.
+6. The first to reach the required points wins. Click "Reset Game" to play again.
+7. Use the "Toggle Dark Mode" button to switch between light and dark themes.
 
 ## Technologies Used
 

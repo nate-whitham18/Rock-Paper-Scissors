@@ -11,6 +11,7 @@
             color: #333;
             text-align: center;
             padding: 50px;
+            transition: background 0.3s, color 0.3s;
         }
         h1 {
             color: #4CAF50;
@@ -31,43 +32,116 @@
             transform: translate(-50%, -50%);
             display: none;
         }
+        .history {
+            margin-top: 30px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+            background: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        }
+        .history h3 {
+            margin-top: 0;
+        }
+        .settings {
+            margin-bottom: 20px;
+        }
+        .dark-mode {
+            background-color: #222 !important;
+            color: #eee !important;
+        }
+        .dark-mode .history {
+            background: #333;
+            color: #eee;
+        }
+        .dark-mode button, .dark-mode select {
+            background: #444;
+            color: #eee;
+            border: 1px solid #666;
+        }
     </style>
 </head>
 <body>
     <h1>Rock, Paper, Scissors Game</h1>
-    <p>First to 3 points wins!</p>
-    <div class ="choices">
+    <div class="settings">
+        <label for="rounds-select">Best of: </label>
+        <select id="rounds-select">
+            <option value="3">3</option>
+            <option value="5" selected>5</option>
+            <option value="7">7</option>
+        </select>
+    </div>
+    <p id="goal-text">First to 3 points wins!</p>
+    <div class="choices">
         <button id="rock">Rock</button>
         <button id="paper">Paper</button>
         <button id="scissors">Scissors</button>
     </div>
-    <div class = "results">
+    <div class="results">
         <p id="round-result">Make your choice to start the game!</p>
     </div>
     <div class="scores">
-        <p>Human Score: <span id = "human-score"> 0 </span></p>
-        <p>Computer Score: <span id = "computer-score"> 0 </span></p>
+        <p>Human Score: <span id="human-score">0</span></p>
+        <p>Computer Score: <span id="computer-score">0</span></p>
     </div>
     <br><br>
-    <div class="reset">
+    <div class="reset-game" >
         <button id="reset-game">Reset Game</button>
     </div>
-
+    <div>
+        <button id="toggle-dark">Toggle Dark Mode</button>
+    </div>
+    <div class="history">
+        <h3>Game History</h3>
+        <ul id="history-list"></ul>
+    </div>
     <script>
         let humanScore = 0;
         let computerScore = 0;
+        let bestOf = 5;
+        let history = [];
 
         const humanScoreSpan = document.getElementById("human-score");
         const computerScoreSpan = document.getElementById("computer-score");
         const roundResult = document.getElementById("round-result");   
         const resetButton = document.getElementById("reset-game");
-        
+        const historyList = document.getElementById("history-list");
+        const roundsSelect = document.getElementById("rounds-select");
+        const goalText = document.getElementById("goal-text");
+        const toggleDark = document.getElementById("toggle-dark");
+
         document.getElementById("rock").addEventListener("click", () => playRound("rock"));
         document.getElementById("paper").addEventListener("click", () => playRound("paper"));
         document.getElementById("scissors").addEventListener("click", () => playRound("scissors"));
         resetButton.addEventListener("click", resetGame);
 
+        roundsSelect.addEventListener("change", function() {
+            bestOf = parseInt(this.value);
+            goalText.textContent = `First to ${Math.ceil(bestOf/2)} points wins!`;
+            resetGame();
+        });
+
+        toggleDark.addEventListener("click", function() {
+            document.body.classList.toggle("dark-mode");
+            if (document.body.classList.contains("dark-mode")) {
+                toggleDark.textContent = "Toggle Light Mode";
+            } else {
+                toggleDark.textContent = "Toggle Dark Mode";
+            }
+        });
+
+        // Set initial button text on page load
+        if (document.body.classList.contains("dark-mode")) {
+            toggleDark.textContent = "Toggle Light Mode";
+        } else {
+            toggleDark.textContent = "Toggle Dark Mode";
+        }
+
         function playRound(humanChoice) {
+            if (humanScore === Math.ceil(bestOf/2) || computerScore === Math.ceil(bestOf/2)) return;
             const computerChoice = getComputerChoice();
             const result = determineWinner(humanChoice, computerChoice);
 
@@ -75,10 +149,19 @@
             humanScoreSpan.textContent = humanScore;
             computerScoreSpan.textContent = computerScore;
 
-            if (humanScore ===3 || computerScore === 3) {
+            // Add to history
+            history.push({
+                human: humanChoice,
+                computer: computerChoice,
+                outcome: result.message
+            });
+            updateHistory();
+
+            if (humanScore === Math.ceil(bestOf/2) || computerScore === Math.ceil(bestOf/2)) {
                 endGame();
             }
         }
+
         function determineWinner(humanChoice, computerChoice) {
             if (humanChoice === computerChoice) {
                 return {message: "It's a tie!" };
@@ -115,15 +198,22 @@
         function resetGame() {
             humanScore = 0;
             computerScore = 0;
+            history = [];
             humanScoreSpan.textContent = humanScore;
             computerScoreSpan.textContent = computerScore;
             roundResult.textContent = "Make your choice to start the game!";
             resetButton.style.display = "none";
             document.querySelectorAll(".choices button").forEach(button => { button.disabled = false; });
+            updateHistory();
         }
-        
-        
+        function updateHistory() {
+            historyList.innerHTML = "";
+            history.forEach((item, idx) => {
+                const li = document.createElement("li");
+                li.textContent = `Round ${idx+1}: You chose ${item.human}, Computer chose ${item.computer} — ${item.outcome}`;
+                historyList.appendChild(li);
+            });
+        }
     </script>
 </body>
-
 </html>
